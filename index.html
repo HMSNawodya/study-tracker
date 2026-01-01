@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Tracker | H.M.S. Nawodya</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+<!-- Login overlay -->
+<section id="loginScreen" class="login-screen">
+    <div class="login-box">
+        <h1>Welcome to Study Tracker</h1>
+        <p class="login-subtitle">
+            Enter your name and choose your style. Your preferences will be saved on this device.
+        </p>
+
+        <form id="loginForm" class="login-form" novalidate>
+            <div class="form-group">
+                <label for="loginName">Name<span>*</span></label>
+                <input type="text" id="loginName" placeholder="Your name">
+            </div>
+
+            <div class="form-group">
+                <label>Gender<span>*</span></label>
+                <div class="login-radios">
+                    <label>
+                        <input type="radio" name="gender" value="male">
+                        Male Theme (Blue)
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="female">
+                        Female Theme (Pink)
+                    </label>
+                </div>
+            </div>
+
+            <small id="loginError" class="error"></small>
+
+            <button type="submit" class="btn primary-btn login-btn">Enter</button>
+        </form>
+    </div>
+</section>
+
+<header class="site-header">
+    <div class="container nav-container">
+        <div class="logo">Study<span>Tracker</span></div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#hours">Hours</a></li>
+                <li><a href="#streak">Streak</a></li>
+                <li><a href="#announcements">Announcements</a></li>
+                <li><a href="#flashcards">Flashcards</a></li>
+                <li><a href="#timer">Timer</a></li>
+                <li><a href="#music">Music</a></li>
+                <li><a href="#todo">To‑Do</a></li>
+                <li><a href="#tips">Study Tips</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <button id="btnThemeToggle" class="theme-toggle" title="Toggle dark / light">☀</button>
+            <span class="header-user">Hi, <span id="userNameDisplay">Student</span></span>
+            <button id="btnLogout" class="logout-btn" title="Log out">Log out</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- Home -->
+    <section id="home" class="section hero">
+        <div class="container hero-grid">
+            <div>
+                <h1>Study Tracker</h1>
+                <p class="hero-subtitle">
+                    A personal dashboard to plan, track and review your study sessions.
+                </p>
+                <ul class="hero-list">
+                    <li>Log daily study hours by subject.</li>
+                    <li>Maintain a daily study streak.</li>
+                    <li>Track upcoming announcements and deadlines.</li>
+                    <li>Revise with custom flashcards and a focus timer.</li>
+                    <li>Use focus music and a to‑do list to stay organised.</li>
+                </ul>
+            </div>
+            <div class="hero-cards">
+                <div class="hero-card">
+                    <h3>Today’s Summary</h3>
+                    <p><span id="summaryDate"></span></p>
+                    <p><strong id="summaryMinutes">0</strong> minutes logged</p>
+                    <p><strong id="summaryTasks">0</strong> tasks</p>
+                    <p><strong id="summaryStreak">0</strong> day streak</p>
+                </div>
+                <div class="hero-card">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#hours">➜ Log study hours</a></li>
+                        <li><a href="#streak">➜ Check in today</a></li>
+                        <li><a href="#flashcards">➜ Build flashcards</a></li>
+                        <li><a href="#timer">➜ Start a 25‑minute session</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hours -->
+    <section id="hours" class="section">
+        <div class="container">
+            <h2>Daily Study Hours Tracker</h2>
+            <p class="section-subtitle">
+                Log study sessions by subject and see totals for each day.
+            </p>
+            <div class="grid-two">
+                <div class="panel">
+                    <h3>Add Study Session</h3>
+                    <form id="hoursForm" class="form" novalidate>
+                        <div class="form-group">
+                            <label for="hoursSubject">Subject / Module<span>*</span></label>
+                            <input type="text" id="hoursSubject" placeholder="e.g. Web Programming">
+                            <small class="error" id="hoursSubjectError"></small>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="hoursDate">Date<span>*</span></label>
+                                <input type="date" id="hoursDate">
+                                <small class="error" id="hoursDateError"></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="hoursMinutes">Minutes<span>*</span></label>
+                                <input type="number" id="hoursMinutes" min="1" step="5" placeholder="e.g. 60">
+                                <small class="error" id="hoursMinutesError"></small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Add Session</button>
+                        <p class="form-success" id="hoursSuccess"></p>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <h3>Logged Sessions</h3>
+                    <div class="table-header">
+                        <div>
+                            <label for="hoursFilterDate">Show date:</label>
+                            <input type="date" id="hoursFilterDate">
+                        </div>
+                        <p>Total: <strong id="hoursTotalForDay">0</strong> minutes</p>
+                    </div>
+                    <table class="table" id="hoursTable">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Minutes</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <p class="empty-state" id="hoursEmpty">No sessions for this date.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Streak -->
+    <section id="streak" class="section section-alt">
+        <div class="container">
+            <h2>Daily Check‑in (Streak)</h2>
+            <p class="section-subtitle">
+                Mark each day you study and maintain your streak.
+            </p>
+            <div class="grid-two">
+                <div class="panel">
+                    <h3>Today</h3>
+                    <p>Click the button after you do at least one study session today.</p>
+                    <button id="btnCheckIn" class="btn primary-btn">Mark Today as Studied</button>
+                    <p class="form-success" id="streakMessage"></p>
+                </div>
+                <div class="panel">
+                    <h3>Streak Stats</h3>
+                    <p>Current Streak: <strong id="streakCurrent">0</strong> days</p>
+                    <p>Best Streak: <strong id="streakBest">0</strong> days</p>
+                    <p>Last Check‑in: <strong id="streakLast">–</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcements -->
+    <section id="announcements" class="section">
+        <div class="container">
+            <h2>Upcoming Announcements</h2>
+            <p class="section-subtitle">
+                Keep track of assignment deadlines, quizzes and important events.
+            </p>
+            <div class="grid-two">
+                <div class="panel">
+                    <h3>Add Announcement</h3>
+                    <form id="announcementForm" class="form" novalidate>
+                        <div class="form-group">
+                            <label for="annTitle">Title<span>*</span></label>
+                            <input type="text" id="annTitle" placeholder="e.g. Web Programming Quiz 2">
+                            <small class="error" id="annTitleError"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="annDate">Date<span>*</span></label>
+                            <input type="date" id="annDate">
+                            <small class="error" id="annDateError"></small>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Add Announcement</button>
+                    </form>
+                </div>
+                <div class="panel">
+                    <h3>Upcoming</h3>
+                    <ul id="annList" class="ann-list"></ul>
+                    <p class="empty-state" id="annEmpty">No announcements added.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flashcards -->
+    <section id="flashcards" class="section section-alt">
+        <div class="container">
+            <h2>Flashcards</h2>
+            <p class="section-subtitle">
+                Create custom flashcards for your own subjects and practise them.
+            </p>
+            <div class="flashcard-panel panel">
+                <!-- Setup (first time) -->
+                <div id="flashSetup">
+                    <h3>Flashcards Setup</h3>
+                    <p class="flash-setup-text">
+                        Tell me your study level and the subjects you study. You can edit this later by clearing browser data.
+                    </p>
+                    <form id="flashSetupForm" class="form" novalidate>
+                        <div class="form-group">
+                            <label for="flashLevel">Study Level<span>*</span></label>
+                            <select id="flashLevel">
+                                <option value="">Select level</option>
+                                <option value="school">School student</option>
+                                <option value="college">College student</option>
+                                <option value="undergraduate">Undergraduate</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="flashSubjects">Subjects (comma separated)<span>*</span></label>
+                            <input type="text" id="flashSubjects"
+                                   placeholder="e.g. Web Programming, Statistics, AI">
+                        </div>
+                        <small id="flashSetupError" class="error"></small>
+                        <button type="submit" class="btn primary-btn">Save Subjects</button>
+                    </form>
+                </div>
+
+                <!-- Main flashcard UI (after setup) -->
+                <div id="flashMain" class="flash-main hidden">
+                    <div class="flash-top">
+                        <div>Level: <strong id="flashLevelDisplay"></strong></div>
+                        <div>
+                            Subject:
+                            <select id="flashSubjectSelect"></select>
+                        </div>
+                    </div>
+
+                    <div class="flash-add">
+                        <h3>Add Flashcard</h3>
+                        <div class="form-group">
+                            <label for="flashQuestion">Question<span>*</span></label>
+                            <input type="text" id="flashQuestion" placeholder="Enter question">
+                        </div>
+                        <div class="form-group">
+                            <label for="flashAnswerInput">Answer<span>*</span></label>
+                            <textarea id="flashAnswerInput" rows="3"
+                                      placeholder="Enter answer"></textarea>
+                        </div>
+                        <small id="flashAddError" class="error"></small>
+                        <button id="flashAddBtn" class="btn primary-btn">Add Card</button>
+                    </div>
+
+                    <div class="flash-practice">
+                        <div id="flashcard" class="flashcard">
+                            <p id="flashcardText">No cards yet for this subject.</p>
+                        </div>
+                        <div class="flashcard-controls">
+                            <button id="flashPrev" class="btn ghost-btn">Prev</button>
+                            <button id="flashToggle" class="btn primary-btn">Show Answer</button>
+                            <button id="flashNext" class="btn ghost-btn">Next</button>
+                        </div>
+                        <p class="flash-index" id="flashIndex"></p>
+                    </div>
+
+                    <div class="flash-list-wrapper">
+                        <h3>Your Cards</h3>
+                        <ul id="flashList" class="flash-list"></ul>
+                        <p class="empty-state" id="flashListEmpty">No cards yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timer -->
+    <section id="timer" class="section">
+        <div class="container">
+            <h2>Countdown Timer – Focus Garden</h2>
+            <p class="section-subtitle">
+                When you start a session, a seed is planted. If you complete the timer,
+                it blooms into a flower. If you reset early, the plant dies.
+            </p>
+            <div class="panel timer-panel">
+                <p class="timer-display" id="timerDisplay">25:00</p>
+                <div class="timer-controls">
+                    <div class="timer-input-group">
+                        <label for="timerMinutes">Minutes</label>
+                        <input type="number" id="timerMinutes" min="1" value="25">
+                    </div>
+                    <div class="timer-buttons">
+                        <button id="btnStart" class="btn primary-btn">Start</button>
+                        <button id="btnPause" class="btn ghost-btn" disabled>Pause</button>
+                        <button id="btnReset" class="btn ghost-btn" disabled>Reset</button>
+                    </div>
+                </div>
+
+                <div class="garden">
+                    <div id="plant" class="plant plant-empty">
+                        <div class="soil"></div>
+                        <div class="pot"></div>
+                        <div class="stem"></div>
+                        <div class="leaf leaf-left"></div>
+                        <div class="leaf leaf-right"></div>
+                        <div class="flower"></div>
+                        <div class="seed"></div>
+                    </div>
+                    <p id="plantStatus" class="plant-status">
+                        Start a session to plant a new seed.
+                    </p>
+                </div>
+
+                <p class="timer-note">
+                    Use 25 minutes for a Pomodoro. Let the timer finish to grow a healthy plant!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music -->
+    <section id="music" class="section section-alt">
+        <div class="container">
+            <h2>Focus Music Player</h2>
+            <p class="section-subtitle">
+                Play background music to stay focused. Replace the audio files with your own tracks.
+            </p>
+            <div class="grid-two">
+                <div class="panel">
+                    <h3>Playlist</h3>
+                    <ul id="musicList" class="music-list"></ul>
+                </div>
+                <div class="panel">
+                    <h3>Now Playing</h3>
+                    <p id="musicNowPlaying">Select a track to start listening.</p>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- To‑Do -->
+    <section id="todo" class="section">
+        <div class="container">
+            <h2>To‑Do List</h2>
+            <p class="section-subtitle">
+                Manage tasks you need to complete today or this week.
+            </p>
+            <div class="grid-two">
+                <div class="panel">
+                    <h3>Add Task</h3>
+                    <form id="todoForm" class="form" novalidate>
+                        <div class="form-group">
+                            <label for="todoText">Task<span>*</span></label>
+                            <input type="text" id="todoText" placeholder="e.g. Finish lab report">
+                            <small class="error" id="todoError"></small>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Add</button>
+                    </form>
+                </div>
+                <div class="panel">
+                    <h3>Tasks</h3>
+                    <ul id="todoList" class="todo-list"></ul>
+                    <p class="empty-state" id="todoEmpty">No to‑do items yet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips -->
+    <section id="tips" class="section section-alt">
+        <div class="container">
+            <h2>Study Tips</h2>
+            <p class="section-subtitle">
+                Simple techniques to improve concentration, memory and time management.
+            </p>
+            <div class="tips-grid">
+                <article class="tip">
+                    <button class="tip-header">
+                        Pomodoro Technique
+                        <span class="tip-toggle">+</span>
+                    </button>
+                    <div class="tip-body">
+                        <p>Work in 25‑minute focused sessions followed by 5‑minute breaks.
+                           After 4 sessions, take a longer break (15–30 minutes).</p>
+                    </div>
+                </article>
+                <article class="tip">
+                    <button class="tip-header">
+                        Active Recall & Spaced Repetition
+                        <span class="tip-toggle">+</span>
+                    </button>
+                    <div class="tip-body">
+                        <p>Instead of just reading notes, quiz yourself using flashcards and
+                           repeat topics over increasing intervals.</p>
+                    </div>
+                </article>
+                <article class="tip">
+                    <button class="tip-header">
+                        Plan Your Day
+                        <span class="tip-toggle">+</span>
+                    </button>
+                    <div class="tip-body">
+                        <p>At the start of the day, choose 3 key tasks. Use the To‑Do list and
+                           Hours Tracker to ensure you spend time on what matters most.</p>
+                    </div>
+                </article>
+                <article class="tip">
+                    <button class="tip-header">
+                        Remove Distractions
+                        <span class="tip-toggle">+</span>
+                    </button>
+                    <div class="tip-body">
+                        <p>Turn off unnecessary notifications, use focus music, and keep only
+                           the materials you need open on your desk and screen.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+        <p>Study Tracker – H.M.S. Nawodya &middot; <span id="year"></span></p>
+    </div>
+</footer>
+</body>
+</html>
